@@ -1,5 +1,6 @@
 package com.kata.evaluacion.motor;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Semaphore;
 
 import org.slf4j.Logger;
@@ -59,7 +60,7 @@ public class EjecutorProtegido implements Ejecutor {
         if (solicitud.codigoFuente() == null || solicitud.codigoFuente().isBlank()) {
             throw new SolicitudInvalidaException("El codigo fuente no puede estar vacio");
         }
-        if (solicitud.codigoFuente().getBytes().length > limites.getMaxTamanoCodigoBytes()) {
+        if (solicitud.codigoFuente().getBytes(StandardCharsets.UTF_8).length > limites.getMaxTamanoCodigoBytes()) {
             throw new SolicitudInvalidaException(
                     "El codigo fuente supera " + limites.getMaxTamanoCodigoBytes() + " bytes");
         }
@@ -71,7 +72,8 @@ public class EjecutorProtegido implements Ejecutor {
                     "Maximo " + limites.getMaxCasosPorEnvio() + " casos por envio");
         }
         for (CasoPrueba caso : solicitud.casos()) {
-            if (caso.entrada() != null && caso.entrada().getBytes().length > limites.getMaxTamanoEntradaBytes()) {
+            if (caso.entrada() != null
+                    && caso.entrada().getBytes(StandardCharsets.UTF_8).length > limites.getMaxTamanoEntradaBytes()) {
                 throw new SolicitudInvalidaException(
                         "La entrada de un caso supera " + limites.getMaxTamanoEntradaBytes() + " bytes");
             }

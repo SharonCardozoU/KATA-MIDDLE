@@ -14,23 +14,23 @@
 </main>
 
 @if (carga.visible()) {
-  <div class="carga" role="status" aria-live="polite">
+  <output class="carga" aria-live="polite">
     <div class="carga-caja">
       <span class="spinner" aria-hidden="true"></span>
       <span>Cargando…</span>
     </div>
-  </div>
+  </output>
 }
 
 @if (confirmacion.pedido(); as pedido) {
-  <div class="carga" role="dialog" aria-modal="true">
+  <dialog class="carga" open aria-labelledby="titulo-confirmacion" aria-describedby="texto-confirmacion">
     <div class="carga-caja dialogo">
-      <strong>{{ pedido.titulo }}</strong>
-      <p>{{ pedido.mensaje }}</p>
+      <strong id="titulo-confirmacion">{{ pedido.titulo }}</strong>
+      <p id="texto-confirmacion">{{ pedido.mensaje }}</p>
       <div class="dialogo-acciones">
         <button type="button" class="secundario" (click)="confirmacion.responder(false)">Cancelar</button>
         <button type="button" class="peligro" (click)="confirmacion.responder(true)">{{ pedido.confirmar }}</button>
       </div>
     </div>
-  </div>
+  </dialog>
 }

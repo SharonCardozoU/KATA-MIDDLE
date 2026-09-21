@@ -135,7 +135,7 @@ public class ServicioIntentos {
         evaluaciones.obtener(evaluacionId);
         Intento intento = intentos.findById(intentoId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("No existe el intento " + intentoId));
-        if (!intento.getEvaluacion().getId().equals(evaluacionId)) {
+        if (!evaluacionId.equals(intento.getEvaluacion().getId())) {
             throw new RecursoNoEncontradoException("El intento no pertenece a esta evaluacion");
         }
         return intento;

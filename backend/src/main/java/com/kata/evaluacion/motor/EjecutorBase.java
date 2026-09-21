@@ -239,7 +239,7 @@ public abstract class EjecutorBase implements Ejecutor {
         try (Stream<Path> rutas = Files.walk(raiz)) {
             rutas.sorted(Comparator.reverseOrder()).forEach(ruta -> {
                 try {
-                    Files.deleteIfExists(ruta);
+                    Files.delete(ruta);
                 } catch (IOException e) {
                     log.warn("No se pudo borrar {}", ruta);
                 }

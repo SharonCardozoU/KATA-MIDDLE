@@ -25,10 +25,11 @@
     <h2>Input</h2>
     <p class="ayuda">Con esta entrada, tu programa debe hacer lo que dice el enunciado e imprimir solo el resultado.</p>
     <table>
+      <caption class="sr-only">Entradas de los casos de prueba</caption>
       <thead>
         <tr>
-          <th>Caso</th>
-          <th>Input</th>
+          <th scope="col">Caso</th>
+          <th scope="col">Input</th>
         </tr>
       </thead>
       <tbody>
@@ -110,14 +111,15 @@
       </div>
 
       <table>
+        <caption class="sr-only">Resultado de cada caso de prueba</caption>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Estado</th>
-            <th>Input</th>
-            <th>Output esperado</th>
-            <th>Output obtenido</th>
-            <th>Tiempo</th>
+            <th scope="col">#</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Input</th>
+            <th scope="col">Output esperado</th>
+            <th scope="col">Output obtenido</th>
+            <th scope="col">Tiempo</th>
           </tr>
         </thead>
         <tbody>
@@ -136,8 +138,7 @@
             </tr>
             @if (caso.mensajeError) {
               <tr>
-                <td></td>
-                <td colspan="5"><pre class="consola">{{ caso.mensajeError }}</pre></td>
+                <td colspan="6"><pre class="consola">{{ caso.mensajeError }}</pre></td>
               </tr>
             }
           }

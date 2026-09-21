@@ -67,10 +67,8 @@ public class SandboxDocker implements Sandbox {
         List<String> argumentos = construirArgumentos(especificacion, imagen, trabajo, comando);
         log.debug("Lanzando contenedor con imagen {}", imagen);
 
-        Process proceso = null;
-        try {
-            proceso = lanzador.iniciar(argumentos);
-
+        try (ProcesoControlado controlado = new ProcesoControlado(lanzador.iniciar(argumentos))) {
+            Process proceso = controlado.proceso();
             CompletableFuture<String> salida = leerAsincrono(proceso.getInputStream());
             CompletableFuture<String> error = leerAsincrono(proceso.getErrorStream());
 
@@ -95,10 +93,6 @@ public class SandboxDocker implements Sandbox {
             String detalle = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
             return new ResultadoComando(-1, "", "No se pudo ejecutar el contenedor: " + detalle,
                     false, System.currentTimeMillis() - inicio);
-        } finally {
-            if (proceso != null && proceso.isAlive()) {
-                proceso.destroyForcibly();
-            }
         }
     }
 
@@ -214,5 +208,14 @@ public class SandboxDocker implements Sandbox {
                 return "";
             }
         });
+    }
+
+    private record ProcesoControlado(Process proceso) implements AutoCloseable {
+        @Override
+        public void close() {
+            if (proceso.isAlive()) {
+                proceso.destroyForcibly();
+            }
+        }
     }
 }

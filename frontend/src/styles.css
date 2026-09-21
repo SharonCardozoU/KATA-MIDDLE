@@ -75,6 +75,18 @@ textarea {
   resize: vertical;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -149,4 +161,11 @@ button {
 td input {
   width: 100%;
   box-sizing: border-box;
+}
+
+td label {
+  width: 100%;
+  margin: 0;
+  gap: 0;
+  font-weight: 400;
 }

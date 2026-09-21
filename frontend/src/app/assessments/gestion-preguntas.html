@@ -73,12 +73,13 @@
     </p>
 
     <table>
+      <caption class="sr-only">Casos de prueba del ejercicio</caption>
       <thead>
         <tr>
-          <th>#</th>
-          <th>Entrada</th>
-          <th>Salida esperada</th>
-          <th></th>
+          <th scope="col">#</th>
+          <th scope="col">Entrada</th>
+          <th scope="col">Salida esperada</th>
+          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -86,15 +87,22 @@
           <tr>
             <td>{{ $index }}</td>
             <td>
-              <textarea
-                rows="4"
-                [value]="caso.entrada"
-                (input)="actualizarEntrada($index, $any($event.target).value)"></textarea>
+              <label>
+                <span class="sr-only">Entrada del caso {{ $index }}</span>
+                <textarea
+                  rows="4"
+                  [value]="caso.entrada"
+                  (input)="actualizarEntrada($index, $any($event.target).value)"></textarea>
+              </label>
             </td>
             <td>
-              <input
-                [value]="caso.salidaEsperada"
-                (input)="actualizarEsperada($index, $any($event.target).value)" />
+              <label>
+                <span class="sr-only">Salida esperada del caso {{ $index }}</span>
+                <input
+                  type="text"
+                  [value]="caso.salidaEsperada"
+                  (input)="actualizarEsperada($index, $any($event.target).value)" />
+              </label>
             </td>
             <td>
               <button type="button" class="texto" (click)="eliminarCaso($index)">Quitar</button>
@@ -130,11 +138,12 @@
         <p class="meta">{{ pregunta.lenguaje }} · {{ pregunta.puntaje }} puntos · {{ pregunta.casos.length }} casos</p>
         <p>{{ pregunta.descripcion }}</p>
         <table>
+          <caption class="sr-only">Casos de {{ pregunta.nombre }}</caption>
           <thead>
             <tr>
-              <th>#</th>
-              <th>Entrada</th>
-              <th>Esperado</th>
+              <th scope="col">#</th>
+              <th scope="col">Entrada</th>
+              <th scope="col">Esperado</th>
             </tr>
           </thead>
           <tbody>

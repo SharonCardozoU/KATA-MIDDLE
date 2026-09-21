@@ -69,12 +69,13 @@
     <p class="vacio">Todavía no hay evaluaciones. Crea la primera con el formulario de arriba.</p>
   } @else {
     <table>
+      <caption class="sr-only">Evaluaciones técnicas</caption>
       <thead>
         <tr>
-          <th>Nombre</th>
-          <th>Tiempo</th>
-          <th>Preguntas</th>
-          <th></th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Tiempo</th>
+          <th scope="col">Preguntas</th>
+          <th scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -109,14 +110,14 @@
 </section>
 
 @if (porEliminar(); as item) {
-  <div class="carga" role="dialog" aria-modal="true">
+  <dialog class="carga" open aria-labelledby="titulo-eliminar" aria-describedby="texto-eliminar">
     <div class="dialogo">
-      <strong>Eliminar evaluación</strong>
-      <p>¿Eliminar "{{ item.nombre }}"? También se borran sus preguntas e intentos.</p>
+      <strong id="titulo-eliminar">Eliminar evaluación</strong>
+      <p id="texto-eliminar">¿Eliminar "{{ item.nombre }}"? También se borran sus preguntas e intentos.</p>
       <div class="dialogo-acciones">
         <button type="button" class="secundario" (click)="cancelarEliminar()">Cancelar</button>
         <button type="button" class="peligro" (click)="confirmarEliminar()">Eliminar</button>
       </div>
     </div>
-  </div>
+  </dialog>
 }

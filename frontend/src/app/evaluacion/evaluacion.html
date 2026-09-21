@@ -39,12 +39,13 @@
   </div>
 
   <table>
+    <caption class="sr-only">Casos de prueba del laboratorio</caption>
     <thead>
       <tr>
-        <th>#</th>
-        <th>Entrada</th>
-        <th>Salida esperada</th>
-        <th></th>
+        <th scope="col">#</th>
+        <th scope="col">Entrada</th>
+        <th scope="col">Salida esperada</th>
+        <th scope="col">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -52,14 +53,22 @@
         <tr>
           <td class="indice">{{ $index }}</td>
           <td>
-            <input
-              [value]="caso.entrada"
-              (input)="actualizarEntrada($index, $any($event.target).value)" />
+            <label>
+              <span class="sr-only">Entrada del caso {{ $index }}</span>
+              <input
+                type="text"
+                [value]="caso.entrada"
+                (input)="actualizarEntrada($index, $any($event.target).value)" />
+            </label>
           </td>
           <td>
-            <input
-              [value]="caso.salidaEsperada"
-              (input)="actualizarEsperada($index, $any($event.target).value)" />
+            <label>
+              <span class="sr-only">Salida esperada del caso {{ $index }}</span>
+              <input
+                type="text"
+                [value]="caso.salidaEsperada"
+                (input)="actualizarEsperada($index, $any($event.target).value)" />
+            </label>
           </td>
           <td>
             <button type="button" class="texto" (click)="eliminarCaso($index)">Quitar</button>
@@ -103,13 +112,14 @@
       </div>
 
       <table>
+        <caption class="sr-only">Resultado de cada caso de prueba</caption>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Estado</th>
-            <th>Esperado</th>
-            <th>Obtenido</th>
-            <th>Tiempo</th>
+            <th scope="col">#</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Esperado</th>
+            <th scope="col">Obtenido</th>
+            <th scope="col">Tiempo</th>
           </tr>
         </thead>
         <tbody>
@@ -127,8 +137,7 @@
             </tr>
             @if (caso.mensajeError) {
               <tr class="detalle">
-                <td></td>
-                <td colspan="4"><pre class="consola">{{ caso.mensajeError }}</pre></td>
+                <td colspan="5"><pre class="consola">{{ caso.mensajeError }}</pre></td>
               </tr>
             }
           }

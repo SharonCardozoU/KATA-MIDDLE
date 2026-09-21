@@ -60,7 +60,15 @@ button.enlace {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
   background: rgba(31, 36, 48, 0.35);
+  color: inherit;
 }
 
 .dialogo {
