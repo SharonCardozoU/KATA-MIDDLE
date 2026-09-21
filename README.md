@@ -56,6 +56,26 @@ Queda en <http://localhost:4200>. El proxy de Angular reenvía `/api` a `http://
 - Frontend y backend: `Ctrl+C` en cada terminal.
 - Postgres: `docker compose down` en la raíz del repo (borra el contenedor; los datos del volumen se conservan).
 
+### Pruebas unitarias
+
+No necesitan Docker ni los puertos 8080/4200. Desde la raíz del repo, en WSL:
+
+**Backend** (`Calificador`, `EjecutorProtegido`, `RegistroEjecutores`):
+
+```bash
+cd backend
+# si Java/Maven no están en el PATH:
+#   source ~/.local/herramientas/entorno.sh
+mvn test
+```
+
+**Frontend** (portada, rutas, reloj, plantillas, carga y confirmación):
+
+```bash
+cd frontend
+npx ng test --watch=false
+```
+
 ### Sobre CORS
 
 El servidor de desarrollo de Angular reenvía todo lo que empiece por `/api` hacia
