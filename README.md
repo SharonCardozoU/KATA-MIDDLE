@@ -131,30 +131,3 @@ Tomadas con `scripts/probar-api.sh` en WSL 2, con las imágenes ya descargadas.
 | Java, 1 caso | 110 ms | 1358 ms |
 | Ciclo infinito en Python | 5010 ms, cortado | 5322 ms |
 
-La brecha de Java es la más informativa: el caso corre en 110 ms, pero el envío
-cuesta 1358 ms porque `javac` compila adentro del contenedor. Es el costo de
-compilar, no de aislar, y es el primer lugar donde habría que optimizar si EC03
-llegara a apretar.
-
-El tiempo por caso se mide leyendo `/proc/uptime` dentro del contenedor, no con
-`date +%s%N`: el `date` de BusyBox que traen las imágenes alpine ignora `%N` y
-devuelve solo segundos. La resolución resultante es de 10 ms.
-
-### Una observación sobre el bloqueo de red
-
-El caso que intenta salir a internet termina en tiempo agotado, no con un error
-inmediato de red. Con `--network none` la resolución de nombres se queda esperando,
-y el `timeout` del socket de Python no cubre esa fase. El egreso está bloqueado, lo
-que se comprueba de forma limpia en la prueba 2 de `scripts/probar-aislamiento.sh`;
-pero conviene saber que por la API el síntoma es un caso que agota su tiempo.
-
-## Compromisos asumidos
-
-El backend invoca el binario `docker` del anfitrión, así que el proceso de la
-aplicación puede crear contenedores. Es cómodo para el kata y es la vía por la que
-un atacante que logre ejecución dentro del backend escalaría. En producción esto se
-resolvería con un servicio de ejecución aparte, con su propia identidad y sin
-acceso al socket de Docker.
-
-El `timeout` por caso mide tiempo de reloj, no de CPU. Un caso que espera en
-entrada y salida consume su presupuesto sin usar procesador.
