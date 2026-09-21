@@ -1,0 +1,150 @@
+<header>
+  <p class="volver"><a routerLink="/admin">← Volver a evaluaciones</a></p>
+  <h1>Preguntas</h1>
+  @if (assessment(); as item) {
+    <p>{{ item.nombre }} · {{ preguntas().length }} de {{ item.cantidadPreguntas }} ejercicios · {{ item.tiempoLimiteMinutos }} minutos</p>
+  }
+</header>
+
+@if (error()) {
+  <p class="aviso aviso-error">{{ error() }}</p>
+}
+
+@if (cupoLleno() && editandoId() === null) {
+  <p class="aviso aviso-ok">Ya están las {{ assessment()?.cantidadPreguntas }} preguntas planeadas. Puedes editar las que ya existen.</p>
+}
+
+@if (mostrarFormulario()) {
+  <section class="panel">
+    <h2>{{ editandoId() ? 'Editar ejercicio' : 'Nuevo ejercicio de programación' }}</h2>
+
+    <label class="bloque">
+      Título
+      <input
+        type="text"
+        maxlength="200"
+        placeholder="Valor máximo de un arreglo"
+        [value]="nombre()"
+        (input)="nombre.set($any($event.target).value)" />
+    </label>
+
+    <label class="bloque">
+      Descripción
+      <textarea
+        rows="4"
+        maxlength="4000"
+        placeholder="Dado un arreglo de números, retorne el valor máximo."
+        [value]="descripcion()"
+        (input)="descripcion.set($any($event.target).value)"></textarea>
+    </label>
+
+    <div class="fila">
+      <label>
+        Lenguaje permitido
+        <select [value]="lenguaje()" (change)="lenguaje.set($any($event.target).value)">
+          @for (nombre of lenguajes(); track nombre) {
+            <option [value]="nombre">{{ nombre }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Puntaje
+        <input
+          type="number"
+          min="0.01"
+          max="1000"
+          step="0.5"
+          [value]="puntaje()"
+          (input)="puntaje.set(+$any($event.target).value)" />
+      </label>
+    </div>
+
+    <div class="fila fila-titulo">
+      <h3>Casos de prueba</h3>
+      <button type="button" class="secundario" (click)="agregarCaso()">Agregar caso</button>
+    </div>
+    <p class="ayuda">
+      Cada valor en su propia línea. Enter sí cuenta: <code>10</code> y abajo <code>20</code>, no
+      <code>10 20</code> en una sola línea. La salida esperada va en una línea, sin espacios de más.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Entrada</th>
+          <th>Salida esperada</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (caso of casos(); track $index) {
+          <tr>
+            <td>{{ $index }}</td>
+            <td>
+              <textarea
+                rows="4"
+                [value]="caso.entrada"
+                (input)="actualizarEntrada($index, $any($event.target).value)"></textarea>
+            </td>
+            <td>
+              <input
+                [value]="caso.salidaEsperada"
+                (input)="actualizarEsperada($index, $any($event.target).value)" />
+            </td>
+            <td>
+              <button type="button" class="texto" (click)="eliminarCaso($index)">Quitar</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="acciones">
+      @if (editandoId()) {
+        <button type="button" class="secundario" (click)="cancelar()">Cancelar</button>
+      }
+      <button type="button" class="primario" [disabled]="!puedeGuardar()" (click)="guardar()">
+        {{ guardando() ? 'Guardando…' : editandoId() ? 'Guardar cambios' : 'Registrar ejercicio' }}
+      </button>
+    </div>
+  </section>
+}
+
+<section class="panel">
+  <h2>Ejercicios registrados</h2>
+
+  @if (preguntas().length === 0) {
+    <p class="vacio">Todavía no hay ejercicios en este assessment.</p>
+  } @else {
+    @for (pregunta of preguntas(); track pregunta.id) {
+      <article class="ejercicio">
+        <div class="fila fila-titulo">
+          <h3>{{ pregunta.nombre }}</h3>
+          <button type="button" class="enlace" (click)="editar(pregunta)">Editar</button>
+        </div>
+        <p class="meta">{{ pregunta.lenguaje }} · {{ pregunta.puntaje }} puntos · {{ pregunta.casos.length }} casos</p>
+        <p>{{ pregunta.descripcion }}</p>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Entrada</th>
+              <th>Esperado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (caso of pregunta.casos; track caso.orden) {
+              <tr>
+                <td>{{ caso.orden }}</td>
+                <td><pre>{{ caso.entrada || '—' }}</pre></td>
+                <td><code>{{ caso.salidaEsperada }}</code></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </article>
+    }
+  }
+</section>

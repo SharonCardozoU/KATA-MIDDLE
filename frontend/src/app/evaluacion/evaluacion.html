@@ -1,0 +1,149 @@
+<header>
+  <h1>Plataforma de Evaluación Técnica</h1>
+  <p>Envía una solución, se ejecuta aislada en un contenedor y se califica contra los casos de prueba.</p>
+</header>
+
+@if (error()) {
+  <p class="aviso aviso-error">{{ error() }}</p>
+}
+
+<section class="panel">
+  <div class="fila">
+    <label>
+      Lenguaje
+      <select [value]="lenguaje()" (change)="cambiarLenguaje($any($event.target).value)">
+        @for (nombre of lenguajes(); track nombre) {
+          <option [value]="nombre">{{ nombre }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Puntaje máximo
+      <input
+        type="number"
+        min="1"
+        [value]="puntajeMaximo()"
+        (input)="puntajeMaximo.set(+$any($event.target).value)" />
+    </label>
+  </div>
+
+  <label class="bloque">
+    Código fuente
+    <textarea
+      rows="14"
+      spellcheck="false"
+      [value]="codigo()"
+      (input)="codigo.set($any($event.target).value)"></textarea>
+  </label>
+</section>
+
+<section class="panel">
+  <div class="fila fila-titulo">
+    <h2>Casos de prueba</h2>
+    <button type="button" class="secundario" (click)="agregarCaso()">Agregar caso</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Entrada</th>
+        <th>Salida esperada</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (caso of casos(); track $index) {
+        <tr>
+          <td class="indice">{{ $index }}</td>
+          <td>
+            <input
+              [value]="caso.entrada"
+              (input)="actualizarEntrada($index, $any($event.target).value)" />
+          </td>
+          <td>
+            <input
+              [value]="caso.salidaEsperada"
+              (input)="actualizarEsperada($index, $any($event.target).value)" />
+          </td>
+          <td>
+            <button type="button" class="texto" (click)="eliminarCaso($index)">Quitar</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
+
+<button type="button" class="primario" [disabled]="!puedeEjecutar()" (click)="ejecutar()">
+  {{ ejecutando() ? 'Ejecutando…' : 'Ejecutar y calificar' }}
+</button>
+
+@if (resultado(); as envio) {
+  <section class="panel">
+    <h2>Resultado</h2>
+
+    @if (!envio.ejecucion.compilacionExitosa) {
+      <p class="aviso aviso-error">Error de compilación</p>
+      <pre class="consola">{{ envio.ejecucion.mensajeCompilacion }}</pre>
+    } @else {
+      <p class="aviso aviso-ok">Compilación exitosa</p>
+      <div class="resumen">
+        <div>
+          <span class="cifra">{{ envio.calificacion.totalCasos }}</span>
+          <span class="rotulo">casos ejecutados</span>
+        </div>
+        <div>
+          <span class="cifra">{{ envio.calificacion.casosExitosos }}</span>
+          <span class="rotulo">exitosos</span>
+        </div>
+        <div>
+          <span class="cifra">{{ envio.calificacion.totalCasos - envio.calificacion.casosExitosos }}</span>
+          <span class="rotulo">fallidos</span>
+        </div>
+        <div>
+          <span class="cifra">{{ envio.calificacion.porcentaje }}%</span>
+          <span class="rotulo">resultado</span>
+        </div>
+        <div>
+          <span class="cifra">{{ envio.calificacion.puntaje }}</span>
+          <span class="rotulo">de {{ puntajeMaximo() }} puntos</span>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Estado</th>
+            <th>Esperado</th>
+            <th>Obtenido</th>
+            <th>Tiempo</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (caso of envio.ejecucion.casos; track caso.indice) {
+            <tr>
+              <td class="indice">{{ caso.indice }}</td>
+              <td>
+                <span class="insignia" [class]="'estado-' + caso.estado.toLowerCase()">
+                  {{ etiquetaDeEstado(caso.estado) }}
+                </span>
+              </td>
+              <td><code>{{ caso.salidaEsperada }}</code></td>
+              <td><code>{{ caso.salidaObtenida || '—' }}</code></td>
+              <td class="tiempo">{{ caso.milisegundos }} ms</td>
+            </tr>
+            @if (caso.mensajeError) {
+              <tr class="detalle">
+                <td></td>
+                <td colspan="4"><pre class="consola">{{ caso.mensajeError }}</pre></td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+}

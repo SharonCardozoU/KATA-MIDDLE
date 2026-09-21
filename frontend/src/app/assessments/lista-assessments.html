@@ -1,0 +1,96 @@
+<header>
+  <h1>Evaluaciones técnicas</h1>
+  <p>Crea el assessment. Las preguntas se agregan en la siguiente pantalla.</p>
+</header>
+
+@if (error()) {
+  <p class="aviso aviso-error">{{ error() }}</p>
+}
+
+<section class="panel">
+  <h2>Nueva evaluación</h2>
+
+  <label class="bloque">
+    Nombre
+    <input
+      type="text"
+      maxlength="200"
+      placeholder="Assessment Full Stack Cloud"
+      [value]="nombre()"
+      (input)="nombre.set($any($event.target).value)" />
+  </label>
+
+  <label class="bloque">
+    Descripción
+    <textarea
+      rows="3"
+      maxlength="2000"
+      placeholder="Evaluación de 60 minutos con 5 preguntas de backend, frontend y nube."
+      [value]="descripcion()"
+      (input)="descripcion.set($any($event.target).value)"></textarea>
+  </label>
+
+  <div class="fila">
+    <label>
+      Tiempo límite (minutos)
+      <input
+        type="number"
+        min="1"
+        max="480"
+        [value]="tiempoLimiteMinutos()"
+        (input)="tiempoLimiteMinutos.set(+$any($event.target).value)" />
+    </label>
+
+    <label>
+      Cantidad de preguntas
+      <input
+        type="number"
+        min="1"
+        max="50"
+        [value]="cantidadPreguntas()"
+        (input)="cantidadPreguntas.set(+$any($event.target).value)" />
+    </label>
+  </div>
+
+  <button type="button" class="primario" [disabled]="!puedeCrear()" (click)="crear()">
+    {{ guardando() ? 'Guardando…' : 'Crear evaluación' }}
+  </button>
+</section>
+
+<section class="panel">
+  <h2>Evaluaciones</h2>
+
+  @if (assessments().length === 0) {
+    <p class="vacio">Todavía no hay evaluaciones. Crea la primera con el formulario de arriba.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tiempo</th>
+          <th>Preguntas</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of assessments(); track item.id) {
+          <tr>
+            <td>
+              <strong>{{ item.nombre }}</strong>
+              @if (item.descripcion) {
+                <p class="descripcion">{{ item.descripcion }}</p>
+              }
+            </td>
+            <td>{{ item.tiempoLimiteMinutos }} min</td>
+            <td>{{ item.preguntasRegistradas }} / {{ item.cantidadPreguntas }}</td>
+            <td>
+              <a class="enlace" [routerLink]="['/admin', 'evaluaciones', item.id, 'preguntas']">
+                Gestionar preguntas
+              </a>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: plataforma-evaluacion-tecnica
+  datasource:
+    url: jdbc:postgresql://localhost:5432/evaluaciones
+    username: kata
+    password: kata
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+kata:
+  ejecucion:
+    segundos-por-caso: 5
+    memoria-mb: 256
+    cpus: 1.0
+    limite-pids: 64
+    tiempo-maximo-total-segundos: 30
+    max-ejecuciones-concurrentes: 4
+    max-tamano-codigo-bytes: 65536
+    max-casos-por-envio: 20
+    max-tamano-entrada-bytes: 8192
+
+logging:
+  level:
+    com.kata.evaluacion: DEBUG

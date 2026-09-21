@@ -1,0 +1,73 @@
+:host {
+  display: block;
+}
+
+.volver {
+  margin: 0 0 0.75rem;
+}
+
+.volver a,
+.enlace {
+  color: #2f6df0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.tablero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+}
+
+.cifra {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.cifra.agotado {
+  color: #9b2c22;
+}
+
+.rotulo {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7383;
+}
+
+.insignia {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.estado-pendiente {
+  background: #f4f5f8;
+  color: #5b6472;
+}
+
+.estado-correcta {
+  background: #e4f6ea;
+  color: #1c6b3c;
+}
+
+.estado-incorrecta {
+  background: #fdecea;
+  color: #9b2c22;
+}
+
+.cerrado {
+  color: #9b2c22;
+  font-size: 0.85rem;
+}
+
+.secundario {
+  display: inline-block;
+  margin-top: 1.25rem;
+  text-decoration: none;
+}

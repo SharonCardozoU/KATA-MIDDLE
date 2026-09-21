@@ -1,0 +1,14 @@
+@if (vista() !== 'portada') {
+  <nav>
+    <a routerLink="/" class="marca">Inicio</a>
+    @if (vista() === 'admin') {
+      <a routerLink="/admin" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Evaluaciones</a>
+      <a routerLink="/admin/laboratorio" routerLinkActive="activo">Laboratorio</a>
+    } @else {
+      <a routerLink="/resolver" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Assessments</a>
+    }
+  </nav>
+}
+<main>
+  <router-outlet />
+</main>

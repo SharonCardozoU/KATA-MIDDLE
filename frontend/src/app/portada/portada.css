@@ -1,0 +1,30 @@
+.puertas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1.25rem;
+}
+
+.puerta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1.5rem 1.35rem;
+  border: 1px solid #dde1e8;
+  border-radius: 10px;
+  background: #fff;
+  text-decoration: none;
+  color: inherit;
+}
+
+.puerta:hover {
+  border-color: #2f6df0;
+}
+
+.puerta strong {
+  font-size: 1.15rem;
+}
+
+.puerta span {
+  color: #5b6472;
+  font-size: 0.95rem;
+}

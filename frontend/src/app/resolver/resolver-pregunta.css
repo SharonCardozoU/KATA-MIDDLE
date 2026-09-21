@@ -1,0 +1,115 @@
+:host {
+  display: block;
+}
+
+.volver {
+  margin: 0 0 0.75rem;
+}
+
+.volver a {
+  color: #2f6df0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.meta {
+  margin-top: -0.75rem;
+}
+
+.ayuda {
+  margin: 0 0 0.9rem;
+  color: #5b6472;
+  font-size: 0.9rem;
+}
+
+.entrada {
+  margin: 0;
+  font-family: ui-monospace, monospace;
+  font-size: 0.9rem;
+  background: #f4f5f8;
+  padding: 0.35rem 0.55rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+
+.acciones {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+textarea {
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  tab-size: 4;
+}
+
+.resumen {
+  display: flex;
+  gap: 2.5rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #eef0f4;
+}
+
+.cifra {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.rotulo {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7383;
+}
+
+.insignia {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.estado-ok {
+  background: #e4f6ea;
+  color: #1c6b3c;
+}
+
+.estado-salida_distinta {
+  background: #fdecea;
+  color: #9b2c22;
+}
+
+.estado-tiempo_agotado {
+  background: #fff4e0;
+  color: #8a5300;
+}
+
+.estado-error_ejecucion {
+  background: #f0eefb;
+  color: #4a3a91;
+}
+
+code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  background: #f4f5f8;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+}
+
+.consola {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  background: #2b303b;
+  color: #e6e9ef;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+}

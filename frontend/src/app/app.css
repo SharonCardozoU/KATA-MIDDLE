@@ -1,0 +1,30 @@
+nav {
+  display: flex;
+  gap: 1.25rem;
+  padding: 0.9rem 1.5rem;
+  background: #1f2430;
+}
+
+nav a {
+  color: #c5cbd6;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+nav a.marca {
+  margin-right: 0.5rem;
+}
+
+nav a.activo,
+nav a:hover {
+  color: #fff;
+}
+
+main {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  color: #1f2430;
+  font-family: system-ui, sans-serif;
+}

@@ -1,0 +1,25 @@
+<header>
+  <h1>Listado de Assessments</h1>
+  <p>Elige una evaluación para comenzar.</p>
+</header>
+
+@if (error()) {
+  <p class="aviso aviso-error">{{ error() }}</p>
+}
+
+<section class="panel">
+  @if (assessments().length === 0) {
+    <p class="vacio">No hay assessments con preguntas.</p>
+  } @else {
+    <ul class="listado">
+      @for (item of assessments(); track item.id) {
+        <li>
+          <button type="button" (click)="entrar(item)" [disabled]="iniciandoId() === item.id">
+            <strong>{{ item.nombre }}</strong>
+            <span>{{ item.tiempoLimiteMinutos }} min · {{ item.preguntasRegistradas }} preguntas</span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</section>

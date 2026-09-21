@@ -1,0 +1,22 @@
+# Credenciales de desarrollo a la vista, a proposito: esta base solo existe en la
+# maquina de quien desarrolla y se recrea con un comando. Nada de esto sirve fuera de local.
+services:
+  base-de-datos:
+    image: postgres:16-alpine
+    container_name: kata-postgres
+    environment:
+      POSTGRES_DB: evaluaciones
+      POSTGRES_USER: kata
+      POSTGRES_PASSWORD: kata
+    ports:
+      - "5432:5432"
+    volumes:
+      - datos-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kata -d evaluaciones"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  datos-postgres:

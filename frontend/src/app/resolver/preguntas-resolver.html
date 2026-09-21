@@ -1,0 +1,36 @@
+<header>
+  <p class="volver"><a routerLink="/resolver">← Volver a assessments</a></p>
+  <h1>{{ assessment()?.nombre || 'Preguntas' }}</h1>
+  @if (assessment(); as item) {
+    <p>{{ item.tiempoLimiteMinutos }} minutos · {{ preguntas().length }} ejercicios</p>
+  }
+</header>
+
+@if (error()) {
+  <p class="aviso aviso-error">{{ error() }}</p>
+}
+
+@if (preguntas().length > 0) {
+  <button type="button" class="primario" [disabled]="iniciando()" (click)="comenzar()">
+    {{ iniciando() ? 'Iniciando…' : 'Comenzar evaluación' }}
+  </button>
+}
+
+<section class="panel">
+  @if (preguntas().length === 0) {
+    <p class="vacio">Este assessment todavía no tiene ejercicios.</p>
+  } @else {
+    @for (pregunta of preguntas(); track pregunta.id) {
+      <article class="ejercicio">
+        <div>
+          <h3>{{ pregunta.nombre }}</h3>
+          <p class="meta">{{ pregunta.lenguaje }} · {{ pregunta.puntaje }} puntos · {{ pregunta.casos.length }} casos</p>
+          <p>{{ pregunta.descripcion }}</p>
+        </div>
+        <button type="button" class="enlace" [disabled]="iniciando()" (click)="comenzar(pregunta.id)">
+          Empezar por esta
+        </button>
+      </article>
+    }
+  }
+</section>

@@ -1,0 +1,141 @@
+<header>
+  <p class="volver">
+    <a [routerLink]="['/resolver', evaluacionId(), 'intento', intentoId()]">← Detalle del assessment</a>
+  </p>
+  <h1>{{ pregunta()?.nombre || 'Editor de código' }}</h1>
+  @if (progreso()) {
+    <p class="meta">{{ progreso() }} · Tiempo restante {{ formatearSegundos(restante()) }}</p>
+  }
+  @if (pregunta(); as item) {
+    <p>{{ item.descripcion }}</p>
+    <p class="meta">Lenguaje sugerido: {{ item.lenguaje }} · {{ item.puntaje }} puntos · {{ item.casos.length }} casos</p>
+  }
+</header>
+
+@if (error()) {
+  <p class="aviso aviso-error">{{ error() }}</p>
+}
+
+@if (pregunta(); as item) {
+  <section class="panel">
+    <h2>Input</h2>
+    <p class="ayuda">Esto es lo que tu programa recibe por stdin. Por ejemplo: <code>[3,5,1,8]</code>. Imprime solo el resultado (un <code>8</code> si el máximo es 8). La plataforma compara sola esa salida con la esperada.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Caso</th>
+          <th>Input</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (caso of item.casos; track caso.orden) {
+          <tr>
+            <td>{{ caso.orden }}</td>
+            <td><pre class="entrada">{{ caso.entrada || '(vacía)' }}</pre></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+}
+
+<section class="panel">
+  <label>
+    Lenguaje
+    <select [value]="lenguaje()" (change)="cambiarLenguaje($any($event.target).value)">
+      @for (nombre of lenguajes(); track nombre) {
+        <option [value]="nombre">{{ nombre }}</option>
+      }
+    </select>
+  </label>
+
+  <label class="bloque">
+    Código
+    <textarea
+      rows="16"
+      spellcheck="false"
+      [value]="codigo()"
+      (input)="codigo.set($any($event.target).value)"></textarea>
+  </label>
+
+  <div class="acciones">
+    <button type="button" class="primario" [disabled]="!puedeEjecutar()" (click)="ejecutar()">
+      {{ tiempoAgotado() ? 'Tiempo agotado' : ejecutando() ? 'Ejecutando…' : 'Ejecutar código' }}
+    </button>
+    @if (siguienteId()) {
+      <button type="button" class="secundario" (click)="irSiguiente()">Siguiente pregunta</button>
+    } @else if (esUltima()) {
+      <button type="button" class="secundario" (click)="irResultado()">Ver resultado de la evaluación</button>
+    }
+  </div>
+</section>
+
+@if (resultado(); as envio) {
+  <section class="panel">
+    <h2>Consola de resultados</h2>
+
+    @if (!envio.ejecucion.compilacionExitosa) {
+      <p class="aviso aviso-error">Error de compilación</p>
+      <pre class="consola">{{ envio.ejecucion.mensajeCompilacion }}</pre>
+    } @else {
+      <p class="aviso aviso-ok">Compilación exitosa</p>
+      <div class="resumen">
+        <div>
+          <span class="cifra">{{ envio.calificacion.totalCasos }}</span>
+          <span class="rotulo">casos ejecutados</span>
+        </div>
+        <div>
+          <span class="cifra">{{ envio.calificacion.casosExitosos }}</span>
+          <span class="rotulo">exitosos</span>
+        </div>
+        <div>
+          <span class="cifra">{{ envio.calificacion.totalCasos - envio.calificacion.casosExitosos }}</span>
+          <span class="rotulo">fallidos</span>
+        </div>
+        <div>
+          <span class="cifra">{{ envio.calificacion.porcentaje }}%</span>
+          <span class="rotulo">resultado</span>
+        </div>
+        <div>
+          <span class="cifra">{{ envio.calificacion.puntaje }}</span>
+          <span class="rotulo">de {{ pregunta()?.puntaje }} puntos</span>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Estado</th>
+            <th>Input</th>
+            <th>Output esperado</th>
+            <th>Output obtenido</th>
+            <th>Tiempo</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (caso of envio.ejecucion.casos; track caso.indice) {
+            <tr>
+              <td>{{ caso.indice }}</td>
+              <td>
+                <span class="insignia" [class]="'estado-' + caso.estado.toLowerCase()">
+                  {{ etiquetaDeEstado(caso.estado) }}
+                </span>
+              </td>
+              <td><code>{{ caso.entrada || '—' }}</code></td>
+              <td><code>{{ caso.salidaEsperada }}</code></td>
+              <td><code>{{ caso.salidaObtenida || '—' }}</code></td>
+              <td>{{ caso.milisegundos }} ms</td>
+            </tr>
+            @if (caso.mensajeError) {
+              <tr>
+                <td></td>
+                <td colspan="5"><pre class="consola">{{ caso.mensajeError }}</pre></td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+}

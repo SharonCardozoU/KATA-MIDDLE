@@ -1,0 +1,67 @@
+@if (resumen(); as item) {
+  <header>
+    <p class="volver"><a routerLink="/resolver">← Assessments</a></p>
+    <h1>Resultados</h1>
+    <p>{{ item.nombreEvaluacion }}</p>
+  </header>
+
+  <section class="panel">
+    <div class="resumen">
+      <div>
+        <span class="cifra">{{ item.puntajeObtenido }}</span>
+        <span class="rotulo">Puntaje obtenido</span>
+      </div>
+      <div>
+        <span class="cifra">{{ item.preguntasCorrectas }}</span>
+        <span class="rotulo">Preguntas correctas</span>
+      </div>
+      <div>
+        <span class="cifra">{{ item.preguntasIncorrectas }}</span>
+        <span class="rotulo">Preguntas incorrectas</span>
+      </div>
+      <div>
+        <span class="cifra">{{ formatearSegundos(item.tiempoConsumidoSegundos) }}</span>
+        <span class="rotulo">Tiempo consumido</span>
+      </div>
+      <div>
+        <span class="cifra">{{ item.porcentaje }}%</span>
+        <span class="rotulo">Resultado</span>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Pregunta</th>
+          <th>Estado</th>
+          <th>Casos</th>
+          <th>Puntaje</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (pregunta of item.preguntas; track pregunta.preguntaId) {
+          <tr>
+            <td>{{ pregunta.nombre }}</td>
+            <td>
+              <span class="insignia" [class]="'estado-' + pregunta.estado.toLowerCase()">
+                {{ etiquetaEstado(pregunta.estado) }}
+              </span>
+            </td>
+            <td>
+              @if (pregunta.respondida) {
+                {{ pregunta.casosExitosos }}/{{ pregunta.totalCasos }}
+              } @else {
+                —
+              }
+            </td>
+            <td>{{ pregunta.puntaje }} / {{ pregunta.puntajeMaximo }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+}
+
+@if (error()) {
+  <p class="aviso aviso-error">{{ error() }}</p>
+}

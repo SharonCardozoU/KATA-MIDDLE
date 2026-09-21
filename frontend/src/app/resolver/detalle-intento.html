@@ -1,0 +1,71 @@
+@if (resumen(); as item) {
+  <header>
+    <p class="volver"><a routerLink="/resolver">← Assessments</a></p>
+    <h1>{{ item.nombreEvaluacion }}</h1>
+  </header>
+
+  <section class="panel tablero">
+    <div>
+      <span class="cifra" [class.agotado]="restante() <= 0">{{ formatearSegundos(restante()) }}</span>
+      <span class="rotulo">Tiempo restante</span>
+    </div>
+    <div>
+      <span class="cifra">{{ item.preguntasRespondidas }}/{{ item.totalPreguntas }}</span>
+      <span class="rotulo">Preguntas</span>
+    </div>
+    <div>
+      <span class="cifra">{{ restante() > 0 ? 'En curso' : 'Finalizado' }}</span>
+      <span class="rotulo">Estado</span>
+    </div>
+    <div>
+      <span class="cifra">{{ item.puntajeObtenido }}</span>
+      <span class="rotulo">Puntaje acumulado</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Preguntas</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Pregunta</th>
+          <th>Estado</th>
+          <th>Puntaje</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (pregunta of item.preguntas; track pregunta.preguntaId) {
+          <tr>
+            <td>{{ pregunta.nombre }}</td>
+            <td>
+              <span class="insignia" [class]="'estado-' + pregunta.estado.toLowerCase()">
+                {{ etiquetaEstado(pregunta.estado) }}
+              </span>
+            </td>
+            <td>{{ pregunta.puntaje }} / {{ pregunta.puntajeMaximo }}</td>
+            <td>
+              @if (restante() > 0) {
+                <a
+                  class="enlace"
+                  [routerLink]="['/resolver', item.evaluacionId, 'intento', item.id, 'preguntas', pregunta.preguntaId]">
+                  {{ pregunta.respondida ? 'Revisar' : 'Resolver' }}
+                </a>
+              } @else {
+                <span class="cerrado">Tiempo agotado</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <a class="secundario" [routerLink]="['/resolver', item.evaluacionId, 'intento', item.id, 'resultado']">
+      Ver resultados
+    </a>
+  </section>
+}
+
+@if (error()) {
+  <p class="aviso aviso-error">{{ error() }}</p>
+}
