@@ -21,7 +21,6 @@ export class Evaluacion implements OnInit {
   readonly lenguajes = signal<string[]>([]);
   readonly lenguaje = signal('python');
   readonly codigo = signal(PLANTILLAS['python']);
-  readonly puntajeMaximo = signal(10);
   readonly casos = signal<CasoPrueba[]>([
     { entrada: '42', salidaEsperada: '84' },
     { entrada: '7', salidaEsperada: '14' },
@@ -44,8 +43,9 @@ export class Evaluacion implements OnInit {
   }
 
   cambiarLenguaje(nuevo: string): void {
-    this.lenguaje.set(nuevo);
-    this.codigo.set(PLANTILLAS[nuevo] ?? '');
+    const clave = (nuevo ?? '').toLowerCase().trim();
+    this.lenguaje.set(clave);
+    this.codigo.set(PLANTILLAS[clave] ?? '');
     this.resultado.set(null);
   }
 
@@ -79,7 +79,7 @@ export class Evaluacion implements OnInit {
         lenguaje: this.lenguaje(),
         codigoFuente: this.codigo(),
         casos: this.casos(),
-        puntajeMaximo: this.puntajeMaximo(),
+        puntajeMaximo: 10,
       })
       .subscribe({
         next: (respuesta) => {

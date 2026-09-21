@@ -3,6 +3,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 
+import { Carga } from './servicios/carga';
+import { Confirmacion } from './servicios/confirmacion';
+
 @Component({
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   selector: 'app-root',
@@ -11,6 +14,8 @@ import { filter, map, startWith } from 'rxjs';
 })
 export class App {
   private readonly router = inject(Router);
+  readonly carga = inject(Carga);
+  readonly confirmacion = inject(Confirmacion);
 
   readonly url = toSignal(
     this.router.events.pipe(

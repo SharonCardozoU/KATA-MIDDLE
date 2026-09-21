@@ -23,6 +23,14 @@ export class AssessmentApi {
     return this.http.post<Assessment>('/api/evaluaciones', peticion);
   }
 
+  actualizar(id: number, peticion: PeticionAssessment): Observable<Assessment> {
+    return this.http.put<Assessment>(`/api/evaluaciones/${id}`, peticion);
+  }
+
+  eliminar(id: number): Observable<void> {
+    return this.http.delete<void>(`/api/evaluaciones/${id}`);
+  }
+
   listarPreguntas(evaluacionId: number): Observable<Pregunta[]> {
     return this.http.get<Pregunta[]>(`/api/evaluaciones/${evaluacionId}/preguntas`);
   }

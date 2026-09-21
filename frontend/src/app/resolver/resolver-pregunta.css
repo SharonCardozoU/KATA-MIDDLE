@@ -13,8 +13,12 @@
   font-weight: 600;
 }
 
-.meta {
-  margin-top: -0.75rem;
+.enunciado {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1f2430;
+  line-height: 1.45;
 }
 
 .ayuda {

@@ -41,9 +41,12 @@
     <div class="fila">
       <label>
         Lenguaje permitido
-        <select [value]="lenguaje()" (change)="lenguaje.set($any($event.target).value)">
+        <select
+          autocomplete="off"
+          [value]="lenguaje()"
+          (change)="lenguaje.set($any($event.target).value)">
           @for (nombre of lenguajes(); track nombre) {
-            <option [value]="nombre">{{ nombre }}</option>
+            <option [value]="nombre" [selected]="nombre === lenguaje()">{{ nombre }}</option>
           }
         </select>
       </label>

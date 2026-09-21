@@ -28,3 +28,74 @@ main {
   color: #1f2430;
   font-family: system-ui, sans-serif;
 }
+
+.carga {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(31, 36, 48, 0.35);
+}
+
+.carga-caja {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.1rem 1.5rem;
+  border-radius: 10px;
+  background: #fff;
+  color: #1f2430;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(31, 36, 48, 0.18);
+}
+
+.carga-caja.dialogo {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+  max-width: 26rem;
+  font-weight: 400;
+}
+
+.carga-caja.dialogo strong {
+  font-size: 1.05rem;
+}
+
+.carga-caja.dialogo p {
+  margin: 0;
+  color: #5b6472;
+  line-height: 1.45;
+}
+
+.dialogo-acciones {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 0.4rem;
+}
+
+.peligro {
+  padding: 0.4rem 0.9rem;
+  border: none;
+  background: #c0392b;
+  color: #fff;
+  font-weight: 600;
+}
+
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 3px solid #dde1e8;
+  border-top-color: #2f6df0;
+  border-radius: 50%;
+  animation: girar 0.7s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}

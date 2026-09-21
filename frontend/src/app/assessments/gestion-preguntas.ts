@@ -55,7 +55,7 @@ export class GestionPreguntas implements OnInit {
       next: (lista) => {
         this.lenguajes.set(lista);
         if (lista.length > 0 && this.editandoId() === null) {
-          this.lenguaje.set(lista[0]);
+          this.lenguaje.set(lista.includes('python') ? 'python' : lista[0]);
         }
       },
     });

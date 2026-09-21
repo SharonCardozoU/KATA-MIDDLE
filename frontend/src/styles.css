@@ -53,11 +53,20 @@ select,
 input,
 textarea {
   font: inherit;
+  font-weight: 400;
   padding: 0.45rem 0.6rem;
   border: 1px solid #ccd2dc;
   border-radius: 6px;
   background: #fff;
   color: inherit;
+}
+
+select::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: #b4bcc8;
+  font-weight: 400;
+  opacity: 1;
 }
 
 textarea {

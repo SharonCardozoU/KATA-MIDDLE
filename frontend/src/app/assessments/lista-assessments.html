@@ -1,6 +1,6 @@
 <header>
   <h1>Evaluaciones técnicas</h1>
-  <p>Crea el assessment. Las preguntas se agregan en la siguiente pantalla.</p>
+  <p>Crea un assessment o prueba técnica. </p>
 </header>
 
 @if (error()) {
@@ -8,7 +8,7 @@
 }
 
 <section class="panel">
-  <h2>Nueva evaluación</h2>
+  <h2>{{ editandoId() ? 'Editar evaluación' : 'Nueva evaluación' }}</h2>
 
   <label class="bloque">
     Nombre
@@ -45,16 +45,21 @@
       Cantidad de preguntas
       <input
         type="number"
-        min="1"
+        [min]="minimoPreguntas()"
         max="50"
         [value]="cantidadPreguntas()"
         (input)="cantidadPreguntas.set(+$any($event.target).value)" />
     </label>
   </div>
 
-  <button type="button" class="primario" [disabled]="!puedeCrear()" (click)="crear()">
-    {{ guardando() ? 'Guardando…' : 'Crear evaluación' }}
-  </button>
+  <div class="acciones">
+    @if (editandoId()) {
+      <button type="button" class="secundario" (click)="cancelar()">Cancelar</button>
+    }
+    <button type="button" class="primario" [disabled]="!puedeGuardar()" (click)="guardar()">
+      {{ guardando() ? 'Guardando…' : editandoId() ? 'Guardar cambios' : 'Crear evaluación' }}
+    </button>
+  </div>
 </section>
 
 <section class="panel">
@@ -83,10 +88,18 @@
             </td>
             <td>{{ item.tiempoLimiteMinutos }} min</td>
             <td>{{ item.preguntasRegistradas }} / {{ item.cantidadPreguntas }}</td>
-            <td>
+            <td class="acciones-fila">
+              <button type="button" class="enlace" (click)="editar(item)">Editar</button>
               <a class="enlace" [routerLink]="['/admin', 'evaluaciones', item.id, 'preguntas']">
                 Gestionar preguntas
               </a>
+              <button
+                type="button"
+                class="texto"
+                [disabled]="eliminandoId() === item.id"
+                (click)="eliminar(item)">
+                {{ eliminandoId() === item.id ? 'Eliminando…' : 'Eliminar' }}
+              </button>
             </td>
           </tr>
         }
@@ -94,3 +107,16 @@
     </table>
   }
 </section>
+
+@if (porEliminar(); as item) {
+  <div class="carga" role="dialog" aria-modal="true">
+    <div class="dialogo">
+      <strong>Eliminar evaluación</strong>
+      <p>¿Eliminar "{{ item.nombre }}"? También se borran sus preguntas e intentos.</p>
+      <div class="dialogo-acciones">
+        <button type="button" class="secundario" (click)="cancelarEliminar()">Cancelar</button>
+        <button type="button" class="peligro" (click)="confirmarEliminar()">Eliminar</button>
+      </div>
+    </div>
+  </div>
+}

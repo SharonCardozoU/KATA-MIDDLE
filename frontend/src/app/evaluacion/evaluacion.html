@@ -1,6 +1,6 @@
 <header>
   <h1>Plataforma de Evaluación Técnica</h1>
-  <p>Envía una solución, se ejecuta aislada en un contenedor y se califica contra los casos de prueba.</p>
+  <p>El Laboratorio es un banco de pruebas. Permite validar el enunciado y los casos sin crear un assessment.</p>
 </header>
 
 @if (error()) {
@@ -11,20 +11,14 @@
   <div class="fila">
     <label>
       Lenguaje
-      <select [value]="lenguaje()" (change)="cambiarLenguaje($any($event.target).value)">
+      <select
+        autocomplete="off"
+        [value]="lenguaje()"
+        (change)="cambiarLenguaje($any($event.target).value)">
         @for (nombre of lenguajes(); track nombre) {
-          <option [value]="nombre">{{ nombre }}</option>
+          <option [value]="nombre" [selected]="nombre === lenguaje()">{{ nombre }}</option>
         }
       </select>
-    </label>
-
-    <label>
-      Puntaje máximo
-      <input
-        type="number"
-        min="1"
-        [value]="puntajeMaximo()"
-        (input)="puntajeMaximo.set(+$any($event.target).value)" />
     </label>
   </div>
 
@@ -105,10 +99,6 @@
         <div>
           <span class="cifra">{{ envio.calificacion.porcentaje }}%</span>
           <span class="rotulo">resultado</span>
-        </div>
-        <div>
-          <span class="cifra">{{ envio.calificacion.puntaje }}</span>
-          <span class="rotulo">de {{ puntajeMaximo() }} puntos</span>
         </div>
       </div>
 

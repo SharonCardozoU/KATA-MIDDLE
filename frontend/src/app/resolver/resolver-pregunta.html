@@ -7,7 +7,6 @@
     <p class="meta">{{ progreso() }} · Tiempo restante {{ formatearSegundos(restante()) }}</p>
   }
   @if (pregunta(); as item) {
-    <p>{{ item.descripcion }}</p>
     <p class="meta">Lenguaje sugerido: {{ item.lenguaje }} · {{ item.puntaje }} puntos · {{ item.casos.length }} casos</p>
   }
 </header>
@@ -18,8 +17,13 @@
 
 @if (pregunta(); as item) {
   <section class="panel">
+    <h2>Enunciado</h2>
+    <p class="enunciado">{{ item.descripcion }}</p>
+  </section>
+
+  <section class="panel">
     <h2>Input</h2>
-    <p class="ayuda">Esto es lo que tu programa recibe por stdin. Por ejemplo: <code>[3,5,1,8]</code>. Imprime solo el resultado (un <code>8</code> si el máximo es 8). La plataforma compara sola esa salida con la esperada.</p>
+    <p class="ayuda">Con esta entrada, tu programa debe hacer lo que dice el enunciado e imprimir solo el resultado.</p>
     <table>
       <thead>
         <tr>
@@ -42,9 +46,12 @@
 <section class="panel">
   <label>
     Lenguaje
-    <select [value]="lenguaje()" (change)="cambiarLenguaje($any($event.target).value)">
+    <select
+      autocomplete="off"
+      [value]="lenguaje()"
+      (change)="cambiarLenguaje($any($event.target).value)">
       @for (nombre of lenguajes(); track nombre) {
-        <option [value]="nombre">{{ nombre }}</option>
+        <option [value]="nombre" [selected]="nombre === lenguaje()">{{ nombre }}</option>
       }
     </select>
   </label>

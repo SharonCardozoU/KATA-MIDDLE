@@ -27,7 +27,7 @@ export class ResolverPregunta implements OnInit, OnDestroy {
   readonly preguntas = signal<Pregunta[]>([]);
   readonly pregunta = signal<Pregunta | null>(null);
   readonly lenguajes = signal<string[]>([]);
-  readonly lenguaje = signal('python');
+  readonly lenguaje = signal('');
   readonly codigo = signal('');
   readonly resultado = signal<EvaluacionEnvio | null>(null);
   readonly ejecutando = signal(false);
@@ -95,8 +95,9 @@ export class ResolverPregunta implements OnInit, OnDestroy {
   }
 
   cambiarLenguaje(nuevo: string): void {
-    this.lenguaje.set(nuevo);
-    this.codigo.set(PLANTILLAS_VACIAS[nuevo] ?? '');
+    const clave = (nuevo ?? '').toLowerCase().trim();
+    this.lenguaje.set(clave);
+    this.codigo.set(PLANTILLAS_VACIAS[clave] ?? '');
     this.resultado.set(null);
   }
 
@@ -188,8 +189,7 @@ export class ResolverPregunta implements OnInit, OnDestroy {
     this.api.obtenerPregunta(evaluacionId, preguntaId).subscribe({
       next: (pregunta) => {
         this.pregunta.set(pregunta);
-        this.lenguaje.set(pregunta.lenguaje);
-        this.codigo.set(PLANTILLAS_VACIAS[pregunta.lenguaje] ?? '');
+        this.cambiarLenguaje(pregunta.lenguaje);
       },
       error: () => this.error.set('No se pudo cargar la pregunta.'),
     });

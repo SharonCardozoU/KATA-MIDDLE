@@ -70,4 +70,11 @@ public class Evaluacion {
     public Instant getCreadoEn() {
         return creadoEn;
     }
+
+    public void actualizar(String nombre, String descripcion, int tiempoLimiteMinutos, int cantidadPreguntas) {
+        this.nombre = nombre;
+        this.descripcion = descripcion == null ? "" : descripcion;
+        this.tiempoLimiteMinutos = tiempoLimiteMinutos;
+        this.cantidadPreguntas = cantidadPreguntas;
+    }
 }
