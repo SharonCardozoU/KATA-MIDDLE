@@ -43,6 +43,16 @@ class CalificadorTest {
         assertEquals(7.5, nota.puntaje());
     }
 
+    @Test
+    void sinCasosElPorcentajeEsCero() {
+        Calificacion nota = calificador.calificar(ResultadoEjecucion.compilado(List.of()), 10);
+
+        assertEquals(0, nota.casosExitosos());
+        assertEquals(0, nota.totalCasos());
+        assertEquals(0d, nota.porcentaje());
+        assertEquals(0d, nota.puntaje());
+    }
+
     private static ResultadoCaso ok(int indice) {
         return new ResultadoCaso(indice, "1", "2", "2", EstadoCaso.OK, null, 10);
     }

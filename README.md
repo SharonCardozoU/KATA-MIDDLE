@@ -76,6 +76,18 @@ cd frontend
 npx ng test --watch=false
 ```
 
+### SonarQube (local)
+
+Calidad de código del **backend y el frontend** en http://localhost:9000. No usa el puerto 8080.
+
+```bash
+sh scripts/sonar.sh
+```
+user:admin
+password:KataSonar12!
+
+Para pararlo: `docker compose -f compose.sonar.yaml down` (el volumen conserva el historial).
+
 ### Sobre CORS
 
 El servidor de desarrollo de Angular reenvía todo lo que empiece por `/api` hacia

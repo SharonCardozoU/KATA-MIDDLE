@@ -34,6 +34,31 @@ class EjecutorProtegidoTest {
     }
 
     @Test
+    void rechazaSinCasosODemasiadosOEntradaGrande() {
+        LimitesEjecucion limites = limites();
+        limites.setMaxCasosPorEnvio(1);
+        limites.setMaxTamanoEntradaBytes(2);
+        EjecutorProtegido proxy = nuevoProxy(limites, solicitud -> ResultadoEjecucion.fallaCompilacion("no"));
+
+        assertThrows(SolicitudInvalidaException.class,
+                () -> proxy.ejecutar(new SolicitudEjecucion("python", "print(1)", List.of())));
+        assertThrows(SolicitudInvalidaException.class,
+                () -> proxy.ejecutar(new SolicitudEjecucion("python", "print(1)", null)));
+        assertThrows(SolicitudInvalidaException.class,
+                () -> proxy.ejecutar(new SolicitudEjecucion("python", "print(1)", List.of(caso(), caso()))));
+        assertThrows(SolicitudInvalidaException.class,
+                () -> proxy.ejecutar(solicitud("python", "print(1)", new CasoPrueba("12345", "1"))));
+    }
+
+    @Test
+    void sanitizaSaltosEnElLenguajeDelLog() {
+        EjecutorProtegido proxy = nuevoProxy(limites(), solicitud -> ResultadoEjecucion.compilado(List.of()));
+
+        assertEquals(true, proxy.ejecutar(solicitud("python\nINFO", "print(1)", caso())).compilacionExitosa());
+        assertEquals(true, proxy.ejecutar(solicitud(null, "print(1)", caso())).compilacionExitosa());
+    }
+
+    @Test
     void rechazaCuandoNoHayCupo() throws Exception {
         LimitesEjecucion limites = limites();
         limites.setMaxEjecucionesConcurrentes(1);

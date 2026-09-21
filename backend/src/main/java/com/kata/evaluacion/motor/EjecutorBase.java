@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -46,6 +48,7 @@ public abstract class EjecutorBase implements Ejecutor {
 
     /** 128 + SIGKILL: lo produce el limite de memoria del contenedor. */
     private static final int CODIGO_TERMINADO_POR_SISTEMA = 137;
+    private static final String PREFIJO_CASO = "caso_";
 
     protected final Sandbox sandbox;
     protected final LimitesEjecucion limites;
@@ -59,7 +62,7 @@ public abstract class EjecutorBase implements Ejecutor {
     public final ResultadoEjecucion ejecutar(SolicitudEjecucion solicitud) {
         Path espacio = null;
         try {
-            espacio = Files.createTempDirectory("kata-");
+            espacio = crearEspacioPrivado();
             prepararEspacio(espacio, solicitud);
 
             ResultadoComando comando = sandbox.ejecutar(new EspecificacionSandbox(
@@ -90,13 +93,27 @@ public abstract class EjecutorBase implements Ejecutor {
 
     protected abstract String comandoEjecucion();
 
+    private static Path crearEspacioPrivado() throws IOException {
+        Path raiz = Path.of(System.getProperty("user.home"), ".kata-sandbox");
+        Files.createDirectories(raiz);
+        restringirADuenio(raiz);
+        Path espacio = raiz.resolve("kata-" + UUID.randomUUID());
+        Files.createDirectories(espacio);
+        restringirADuenio(espacio);
+        return espacio;
+    }
+
+    private static void restringirADuenio(Path ruta) throws IOException {
+        Files.setPosixFilePermissions(ruta, PosixFilePermissions.fromString("rwx------"));
+    }
+
     private void prepararEspacio(Path espacio, SolicitudEjecucion solicitud) throws IOException {
         escribir(espacio.resolve(nombreArchivoFuente()), solicitud.codigoFuente());
 
         List<CasoPrueba> casos = solicitud.casos();
         for (int i = 0; i < casos.size(); i++) {
             String entrada = casos.get(i).entrada() == null ? "" : casos.get(i).entrada();
-            escribir(espacio.resolve("caso_" + i + ".in"), entrada.endsWith("\n") ? entrada : entrada + "\n");
+            escribir(archivoCaso(espacio, i, ".in"), entrada.endsWith("\n") ? entrada : entrada + "\n");
         }
 
         escribir(espacio.resolve("ejecutar.sh"), guion(casos.size()));
@@ -153,10 +170,10 @@ public abstract class EjecutorBase implements Ejecutor {
     }
 
     private ResultadoCaso evaluarCaso(Path espacio, int indice, CasoPrueba caso) {
-        long milisegundos = numeroDeArchivo(espacio.resolve("caso_" + indice + ".ms"));
-        int codigo = codigoDeSalida(espacio.resolve("caso_" + indice + ".code"));
-        String obtenida = normalizar(leer(espacio.resolve("caso_" + indice + ".out")));
-        String error = leer(espacio.resolve("caso_" + indice + ".err"));
+        long milisegundos = numeroDeArchivo(archivoCaso(espacio, indice, ".ms"));
+        int codigo = codigoDeSalida(archivoCaso(espacio, indice, ".code"));
+        String obtenida = normalizar(leer(archivoCaso(espacio, indice, ".out")));
+        String error = leer(archivoCaso(espacio, indice, ".err"));
         String esperada = normalizar(caso.salidaEsperada());
 
         if (CODIGOS_TIEMPO_AGOTADO.contains(codigo)) {
@@ -185,6 +202,10 @@ public abstract class EjecutorBase implements Ejecutor {
 
     private void escribir(Path destino, String contenido) throws IOException {
         Files.writeString(destino, contenido, StandardCharsets.UTF_8);
+    }
+
+    private static Path archivoCaso(Path espacio, int indice, String extension) {
+        return espacio.resolve(PREFIJO_CASO + indice + extension);
     }
 
     private String leer(Path origen) {

@@ -1,6 +1,7 @@
 package com.kata.evaluacion.api;
 
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -47,9 +48,11 @@ public class ManejadorErrores {
     }
 
     private ResponseEntity<Map<String, Object>> respuesta(HttpStatus estado, String mensaje) {
-        return ResponseEntity.status(estado).body(Map.of(
-                "instante", Instant.now().toString(),
-                "estado", estado.value(),
-                "mensaje", mensaje));
+        String texto = (mensaje == null || mensaje.isBlank()) ? estado.getReasonPhrase() : mensaje;
+        Map<String, Object> cuerpo = new LinkedHashMap<>();
+        cuerpo.put("instante", Instant.now().toString());
+        cuerpo.put("estado", estado.value());
+        cuerpo.put("mensaje", texto);
+        return ResponseEntity.status(estado).body(cuerpo);
     }
 }

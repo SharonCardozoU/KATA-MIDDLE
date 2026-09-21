@@ -2,6 +2,7 @@ backend/target/
 frontend/node_modules/
 frontend/dist/
 frontend/.angular/
+.scannerwork/
 *.log
 .idea/
 .DS_Store

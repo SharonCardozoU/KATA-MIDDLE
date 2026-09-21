@@ -11,7 +11,7 @@ import com.kata.evaluacion.motor.modelo.SolicitudEjecucion;
 
 /**
  * Proxy de proteccion. Comparte la interfaz Ejecutor, asi que ni el orquestador
- * ni los ejecutores por lenguaje saben que existe: todo el control de admision
+ * ni los ejecutores por lenguaje saben que existe. El control de admision
  * queda en un solo punto.
  *
  * Realiza dos tacticas: validar la entrada (EC01) y limitar la respuesta a un
@@ -47,7 +47,8 @@ public class EjecutorProtegido implements Ejecutor {
                             + " ejecuciones. Reintente en unos segundos.");
         }
         try {
-            log.info("Ejecutando envio en {} con {} casos", solicitud.lenguaje(), solicitud.casos().size());
+            log.info("Ejecutando envio en {} con {} casos",
+                    sanitizar(solicitud.lenguaje()), solicitud.casos().size());
             return delegado.ejecutar(solicitud);
         } finally {
             cupos.release();
@@ -75,5 +76,9 @@ public class EjecutorProtegido implements Ejecutor {
                         "La entrada de un caso supera " + limites.getMaxTamanoEntradaBytes() + " bytes");
             }
         }
+    }
+
+    private static String sanitizar(String valor) {
+        return valor == null ? "" : valor.replace('\r', '_').replace('\n', '_').replace('\t', '_');
     }
 }

@@ -6,7 +6,7 @@ import { PLANTILLAS } from '../modelos/plantillas';
 import { EvaluacionApi } from '../servicios/evaluacion-api';
 
 /**
- * Capa VistaModelo del MVVM. Guarda el estado de la pantalla en senales y traduce
+ * Capa VistaModelo del MVVM. Guarda el estado de la pantalla en señales y traduce
  * la respuesta del backend a algo que la vista pueda pintar. No sabe nada de HTTP:
  * eso es responsabilidad de EvaluacionApi.
  */
@@ -103,6 +103,8 @@ export class Evaluacion implements OnInit {
         return 'Tiempo agotado';
       case 'ERROR_EJECUCION':
         return 'Error de ejecucion';
+      default:
+        return estado;
     }
   }
 
