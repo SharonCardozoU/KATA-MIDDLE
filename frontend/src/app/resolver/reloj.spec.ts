@@ -1,4 +1,4 @@
-import { etiquetaEstado, formatearSegundos } from './reloj';
+import { etiquetaEstado, formatearSegundos, segundosRestantes } from './reloj';
 
 describe('reloj', () => {
   it('formatea minutos y segundos', () => {
@@ -11,5 +11,13 @@ describe('reloj', () => {
     expect(etiquetaEstado('CORRECTA')).toBe('Correcta');
     expect(etiquetaEstado('INCORRECTA')).toBe('Incorrecta');
     expect(etiquetaEstado('PENDIENTE')).toBe('Pendiente');
+  });
+
+  it('calcula los segundos que quedan del intento', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-01-01T00:01:00.000Z'));
+    expect(segundosRestantes('2026-01-01T00:00:00.000Z', 2)).toBe(60);
+    expect(segundosRestantes('2026-01-01T00:00:00.000Z', 1)).toBe(0);
+    vi.useRealTimers();
   });
 });

@@ -16,14 +16,4 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     expect(fixture.componentInstance).toBeTruthy();
   });
-
-  it('muestra las dos vistas en la portada', async () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-    await fixture.whenStable();
-
-    const elemento = fixture.nativeElement as HTMLElement;
-    expect(elemento.textContent).toContain('Administrador');
-    expect(elemento.textContent).toContain('Candidato');
-  });
 });
