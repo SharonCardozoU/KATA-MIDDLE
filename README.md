@@ -4,11 +4,6 @@ Backend del kata. La pieza que carga el peso arquitectónico es el **motor de
 ejecución**: recibe código que no es de confianza, lo corre aislado y lo califica
 contra un conjunto de casos de prueba.
 
-## Cómo correrlo
-
-Todo vive en **WSL (Ubuntu)**. Ahí está el demonio de Docker que el aislamiento
-necesita. En Windows nativo (JRE 8, sin Maven) no arranca.
-
 ### Qué tiene que estar instalado
 
 | Requisito | Notas |
@@ -28,14 +23,9 @@ Desde la raíz del repo, en WSL:
 **1. Base de datos**
 
 ```bash
-cd ~/dev/work/kata-assessment-platform
 docker compose up -d
 docker ps
 ```
-
-Tiene que aparecer el contenedor `kata-postgres` en el puerto 5432. Si Spring se lanza antes, Flyway muere con:
-
-`Connection to localhost:5432 refused`
 
 **2. Imágenes del sandbox** (Python, Node, Java, TypeScript, COBOL)
 
@@ -43,12 +33,9 @@ Tiene que aparecer el contenedor `kata-postgres` en el puerto 5432. Si Spring se
 sh scripts/preparar-imagenes.sh
 ```
 
-Sin esto el API sube, pero ejecutar código falla al no encontrar las imágenes.
-
 **3. Backend** — otra terminal, y déjala abierta:
 
 ```bash
-cd ~/dev/work/kata-assessment-platform/backend
 # si Java/Maven no están en el PATH:
 #   source ~/.local/herramientas/entorno.sh
 mvn spring-boot:run
@@ -59,7 +46,6 @@ Espera a ver que quedó escuchando en **8080**.
 **4. Frontend** — otra terminal:
 
 ```bash
-cd ~/dev/work/kata-assessment-platform/frontend
 npx ng serve
 ```
 
@@ -69,30 +55,6 @@ Queda en <http://localhost:4200>. El proxy de Angular reenvía `/api` a `http://
 
 - Frontend y backend: `Ctrl+C` en cada terminal.
 - Postgres: `docker compose down` en la raíz del repo (borra el contenedor; los datos del volumen se conservan).
-
-### Si algo no sube
-
-| Síntoma | Causa habitual |
-|---|---|
-| `Connection to localhost:5432 refused` | No corriste `docker compose up -d`, o Docker Desktop está cerrado |
-| Puerto 8080 ocupado | Quedó un `mvn spring-boot:run` anterior; ciérralo o mata el proceso |
-| `ng serve` pide Node más nuevo | `nvm install 24` y `nvm use 24` |
-| Ejecutar código falla / no hay imagen | Falta `sh scripts/preparar-imagenes.sh` |
-| COBOL o TypeScript no compilan | Esas imágenes se construyen en el paso 2; no vienen de Docker Hub |
-
-### Probar solo el API, sin interfaz
-
-Con Postgres y el backend ya arriba:
-
-```bash
-sh scripts/probar-api.sh
-```
-
-Aislamiento (EC01), sin backend:
-
-```bash
-sh scripts/probar-aislamiento.sh
-```
 
 ### Sobre CORS
 
